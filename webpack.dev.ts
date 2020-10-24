@@ -1,9 +1,10 @@
 import path from 'path';
+import webpack from 'webpack';
 import merge from 'webpack-merge';
 
 import common from './webpack.common';
 
-const config = merge(common, {
+const config: webpack.Configuration = merge(common, {
     mode: 'development',
     devtool: 'inline-cheap-source-map',
     devServer: {

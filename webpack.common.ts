@@ -11,7 +11,7 @@ const config: webpack.Configuration = {
         })
     ],
     optimization: {
-        moduleIds: 'hashed',
+        moduleIds: 'deterministic',
         runtimeChunk: 'single',
         splitChunks: {
             cacheGroups: {

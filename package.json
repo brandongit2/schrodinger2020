@@ -6,7 +6,7 @@
     "scripts": {
         "build": "webpack --config webpack.prod.ts",
         "host": "ts-node -T ./server.ts",
-        "start": "webpack-dev-server --config webpack.dev.ts"
+        "start": "webpack serve --config webpack.dev.ts"
     },
     "repository": {
         "type": "git",
