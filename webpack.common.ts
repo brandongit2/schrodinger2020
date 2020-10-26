@@ -40,17 +40,13 @@ const config: webpack.Configuration = {
                 enforce: 'pre'
             },
             {
-                test: /\.png$/i,
+                test: /\.(png|ttf)$/i,
                 use: ['file-loader']
-            },
-            {
-                test: /\.(glsl|obj)$/i,
-                use: ['raw-loader']
             }
         ]
     },
     resolve: {
-        extensions: ['.ts', '.js', '.json', '.png', '.glsl', '.obj', '.scss', '.sass', '.html']
+        extensions: ['.ts', '.js', '.json', '.png', '.ttf', '.scss', '.sass', '.html']
     }
 };
 

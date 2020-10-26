@@ -1,10 +1,21 @@
+import Slider from './Slider'
+import * as util from './util';
+
 import './index.scss';
 
-const gridWidth = 1000;
-const gridHeight = 1000;
-const j = 1;
-const k = 1.38065e-23;
-let T = 298;
+const gridWidth = 400;
+const gridHeight = 400;
+const j = 100000;
+const curieTemp = 2 * j / (Math.log(1 + Math.sqrt(2)));
+let kT = new Slider('Temperature', 1, 2 * curieTemp, 1, 'K');
+let h = new Slider('Field Strength', -1.5, 1.5, 0, 'T');
+
+interface Cell {
+    spin: number,
+    energy: number
+}
+
+let data: Cell[] = [];
 
 function getNeighboringCells(i: number) {
     let row = Math.floor(i / gridWidth);
@@ -21,31 +32,56 @@ function getNeighboringCells(i: number) {
     if (up < 0) up += gridWidth * gridHeight;
 
     let down = i + gridWidth;
-    if (down > gridWidth * gridHeight) down -= gridWidth * gridHeight;
+    if (down > gridWidth * gridHeight - 1) down -= gridWidth * gridHeight;
 
     return { left, right, up, down };
 }
 
-window.addEventListener('load', () => {
-    let data: number[] = [];
-    for (let i = 0; i < gridHeight; i++) {
-        for (let j = 0; j < gridWidth; j++) {
-            data.push(Math.round(Math.random()) * 2 - 1);
-        }
-    }
+function calcEnergy(i: number) {
+    let neighborSpins = Object.values(getNeighboringCells(i)).map(idx => data[idx].spin);
+    return -j * data[i].spin * util.sum(neighborSpins);
 
+}
+
+function meanEnergy() {
+    return 0.5 * util.sum(data.map(n => n.energy)) / data.length;
+}
+
+function meanMag() {
+    return util.sum(data.map(n => n.spin)) / data.length;
+}
+
+// Initial population of lattice with random spins
+for (let i = 0; i < gridHeight; i++) {
+    for (let j = 0; j < gridWidth; j++) {
+        data.push({
+            spin: Math.round(Math.random()) * 2 - 1,
+            energy: 0
+        });
+    }
+}
+
+// Then calculate energies
+for (let i = 0; i < data.length; i++) {
+    data[i].energy = calcEnergy(i);
+}
+
+window.addEventListener('load', () => {
+    // Create canvas element
     let canvas = document.createElement('canvas');
     canvas.width = gridWidth;
     canvas.height = gridHeight;
+    document.getElementById('content').appendChild(canvas);
+    canvas.style.width = `${canvas.clientHeight}px`;
+    window.addEventListener('resize', () => {
+        canvas.style.width = `${canvas.clientHeight}px`;
+    });
 
-    document.body.appendChild(canvas);
+    // Get canvas context
     let ctx = canvas.getContext('2d');
 
-    let fl = (n: number) => Math.floor(n);
-    let cl = (n: number) => Math.ceil(n);
-
     let setCell = (i: number, spin: number) => {
-        ctx.fillStyle = spin === -1 ? 'white' : 'black';
+        ctx.fillStyle = spin === -1 ? 'black' : 'white';
         ctx.fillRect(
             i % gridWidth,
             Math.floor(i / gridWidth),
@@ -53,23 +89,20 @@ window.addEventListener('load', () => {
         );
     }
 
-    ctx.fillStyle = 'black';
-    data.forEach((spin, i) => {
+    data.forEach(({ spin }, i) => {
         if (spin === 1) setCell(i, spin);
     })
 
     setInterval(() => {
-        let time = performance.now();
-        for (let a = 0; a < 1000; a++) {
+        for (let a = 0; a < 10000; a++) {
             let i = Math.floor(Math.random() * data.length);
 
-            let deltaE = 2 * j * data[i] * Object.values(getNeighboringCells(i)).map(i => data[i]).reduce((acc, cur) => acc + cur, 0);
+            let deltaE = 2 * (j * data[i].spin * util.sum(Object.values(getNeighboringCells(i)).map(i => data[i].spin)) + h.value * data[i].spin)
 
-            if (deltaE < 0 || Math.random() <= Math.exp(-deltaE / k / T)) {
-                data[i] *= -1;
-                setCell(i, data[i]);
+            if (deltaE < 0 || Math.random() <= Math.exp(-deltaE / kT.value)) {
+                data[i].spin *= -1;
+                setCell(i, data[i].spin);
             }
         }
-        document.getElementById('debug').innerHTML = String(performance.now() - time);
     }, 1);
 });
