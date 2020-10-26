@@ -9,8 +9,8 @@ export default class Slider {
     private inside: HTMLElement;
     private valueText: HTMLElement;
 
-    constructor(name: string, min: number, max: number, value: number, units: string = '') {
-        this.value = value;
+    constructor(name: string, min: number, max: number, defaultValue: number, units: string = '') {
+        this.value = defaultValue;
         this.min = min;
         this.max = max;
         this.units = units;
@@ -21,10 +21,13 @@ export default class Slider {
         outside.style.height = `${sliderHeight}px`;
         outside.style.margin = '0px 10px';
         outside.style.background = '#222';
+        outside.style.cursor = 'ew-resize';
 
         outside.addEventListener('mousedown', (evt) => {
             evt.preventDefault();
             evt.stopPropagation();
+
+            document.body.style.cursor = 'ew-resize';
 
             let change = (evt: MouseEvent) => {
                 if (evt.buttons === 1) {
@@ -39,7 +42,13 @@ export default class Slider {
 
             window.addEventListener('mouseup', () => {
                 window.removeEventListener('mousemove', change);
+                document.body.style.cursor = 'unset';
             });
+        });
+
+        outside.addEventListener('dblclick', () => {
+            this.value = defaultValue;
+            this.update();
         });
 
         this.valueText = document.createElement('span');
@@ -47,9 +56,10 @@ export default class Slider {
         this.valueText.style.top = '50%';
         this.valueText.style.left = '5px';
         this.valueText.style.transform = 'translate(0px, -50%)';
+        this.valueText.style.pointerEvents = 'none';
         // @ts-ignore
         this.valueText.style.mixBlendMode = 'difference';
-        this.valueText.innerHTML = `${value} ${units}`;
+        this.valueText.innerHTML = `${defaultValue} ${units}`;
         outside.appendChild(this.valueText);
 
         this.inside = document.createElement('div');
