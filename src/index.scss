@@ -26,15 +26,7 @@ button {
     border: none;
     border-radius: 0px;
     cursor: pointer;
-}
-
-canvas {
-    position: relative;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    height: 100%;
-    max-height: 500px;
+    outline: none;
 }
 
 #dimension-toggle {
@@ -42,6 +34,7 @@ canvas {
     display: flex;
     border: 1px solid white;
     margin-top: 1rem;
+    z-index: 2;
 }
 
 #mask {
@@ -60,13 +53,14 @@ canvas {
 }
 
 #content {
+    position: relative;
     flex-grow: 1;
     width: 100%;
     margin: 1rem;
-    overflow: hidden;
 }
 
 #controls {
+    background: black;
     margin: 2rem;
     margin-top: 0px;
     padding: 1rem;
@@ -74,6 +68,7 @@ canvas {
     border: 1px solid white;
     display: flex;
     justify-content: center;
+    z-index: 2;
 }
 
 .control {
