@@ -17,6 +17,12 @@ body {
     font-size: 80%;
 }
 
+p,
+span,
+button {
+    user-select: none;
+}
+
 button {
     color: white;
     padding: 5px 10px;
@@ -75,4 +81,18 @@ button {
     display: flex;
     align-items: center;
     margin: 0px 1rem;
+}
+
+#analyze {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    margin-left: 2rem;
+    padding: 1rem;
+    border: 1px solid white;
+    transition: width 0.5s, height 0.5s;
+}
+
+#analyze-content:not(.visible) {
+    display: none;
 }

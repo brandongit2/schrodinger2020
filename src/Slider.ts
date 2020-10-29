@@ -1,3 +1,5 @@
+import * as util from './util';
+
 const sliderWidth = 150;
 const sliderHeight = 20;
 
@@ -23,6 +25,7 @@ export default class Slider {
         outside.style.background = '#222';
         outside.style.cursor = 'ew-resize';
 
+        // HANDLE MOUSE EVENTS
         outside.addEventListener('mousedown', (evt) => {
             evt.preventDefault();
             evt.stopPropagation();
@@ -49,6 +52,33 @@ export default class Slider {
         outside.addEventListener('dblclick', () => {
             this.value = defaultValue;
             this.update();
+        });
+
+        // HANDLE TOUCH EVENTS
+        outside.addEventListener('touchstart', (evt) => {
+            evt.preventDefault();
+            evt.stopPropagation();
+
+            let prevPos: [] | [number, number] = [];
+
+            let change = (evt: TouchEvent) => {
+                let touchPos: [number, number] = [evt.touches[0].clientX, evt.touches[0].clientY];
+
+                if (evt.touches.length === 1 && prevPos.length !== 0) {
+                    let newValue = this.value + (touchPos[0] - prevPos[0]) * (max - min) / sliderWidth;
+                    if (newValue < min) newValue = min;
+                    if (newValue > max) newValue = max;
+                    this.value = newValue;
+                    this.update();
+                }
+
+                prevPos = touchPos;
+            }
+            window.addEventListener('touchmove', change)
+
+            window.addEventListener('touchend', (evt: TouchEvent) => {
+                if (evt.touches.length === 0) window.removeEventListener('touchmove', change);
+            });
         });
 
         this.valueText = document.createElement('span');

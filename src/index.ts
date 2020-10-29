@@ -1,3 +1,4 @@
+import * as analyze from './analyze';
 import * as ising2D from './ising2D';
 import * as ising3D from './ising3D';
 
@@ -5,6 +6,7 @@ import './index.scss';
 
 function init() {
     ising2D.init();
+    analyze.init();
     document.getElementById('three').addEventListener('click', switchTo3D);
 }
 

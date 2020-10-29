@@ -36,10 +36,10 @@ export function init() {
     })
 
     loop = setInterval(() => {
-        for (let a = 0; a < 10000; a++) {
+        for (let a = 0; a < 10000 * Math.exp((global.speed.value - 5) / 5); a++) {
             let i = Math.floor(Math.random() * data.length);
 
-            let deltaE = 2 * (global.j.value * data[i].spin * util.sum(Object.values(getNeighboringCells(i)).map(i => data[i].spin)) + global.h.value * data[i].spin)
+            let deltaE = 2 * (global.j * data[i].spin * util.sum(Object.values(getNeighboringCells(i)).map(i => data[i].spin)) + global.h.value * data[i].spin);
 
             if (deltaE < 0 || Math.random() <= Math.exp(-deltaE / global.kT.value)) {
                 data[i].spin *= -1;
