@@ -35,11 +35,15 @@ export function init() {
         if (spin === 1) setCell(i, spin);
     })
 
+    play();
+}
+
+export function play() {
     loop = setInterval(() => {
-        for (let a = 0; a < 10000 * Math.exp((global.speed.value - 5) / 5); a++) {
+        for (let a = 0; a < 10000; a++) {
             let i = Math.floor(Math.random() * data.length);
 
-            let deltaE = 2 * (global.j * data[i].spin * util.sum(Object.values(getNeighboringCells(i)).map(i => data[i].spin)) + global.h.value * data[i].spin);
+            let deltaE = 2 * (global.j.value * data[i].spin * util.sum(Object.values(getNeighboringCells(i)).map(i => data[i].spin)) + global.h.value * data[i].spin);
 
             if (deltaE < 0 || Math.random() <= Math.exp(-deltaE / global.kT.value)) {
                 data[i].spin *= -1;
@@ -52,7 +56,7 @@ export function init() {
     }, 1);
 }
 
-export function terminate() {
+export function pause() {
     clearInterval(loop);
 }
 
@@ -108,9 +112,13 @@ function getNeighboringCells(i: number) {
 
 function calcEnergy(i: number) {
     let neighborSpins = Object.values(getNeighboringCells(i)).map(idx => data[idx].spin);
-    return -global.j * data[i].spin * util.sum(neighborSpins);
+    return -global.j.value * data[i].spin * util.sum(neighborSpins);
 }
 
 export function meanEnergy() {
     return util.sum(data.map(datum => datum.energy)) / data.length;
+}
+
+export function meanMagnetization() {
+    return Math.abs(util.sum(data.map(datum => datum.spin)) / data.length);
 }

@@ -20,13 +20,16 @@
             <button id="two">2D</button>
             <button id="three">3D</button>
             <div id="mask"></div>
+            <button id="play-pause"><i class="fas fa-pause"></i></button>
         </div>
         <div id="content">
-            <div id="analyze">
-                <span id="analyze-button">analyze<i id="arrow" class="fas fa-chevron-up"></i></span>
-                <div id="analyze-content">
-                    <span id="add-graph">+ Add graph</span>
-                    <div id="graphs"></div>
+            <div id="graphs">
+                <span id="graphs-button">analyze<i class="fas fa-chevron-up"></i></span>
+                <div id="graphs-content">
+                    <div>
+                        <span>Plot: <select id="graphs-dropdown"></select></span>
+                        <button id="clear-graph">clear</button>
+                    </div>
                 </div>
             </div>
         </div>

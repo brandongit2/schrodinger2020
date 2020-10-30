@@ -72,14 +72,16 @@ export function init() {
     data.forEach(({ spin }, i) => {
         setCell(i, spin);
     })
+}
 
+export function play() {
     function animate() {
         for (let a = 0; a < 10000; a++) {
             let i = Math.floor(Math.random() * data.length);
 
             let deltaE;
             try {
-                deltaE = 2 * (global.j * data[i].spin * util.sum(Object.values(getNeighboringCells(i)).map(i => data[i].spin)) + global.h.value * data[i].spin);
+                deltaE = 2 * (global.j.value * data[i].spin * util.sum(Object.values(getNeighboringCells(i)).map(i => data[i].spin)) + global.h.value * data[i].spin);
             } catch { console.log(i) }
 
             if (deltaE < 0 || Math.random() <= Math.exp(-deltaE / global.kT.value)) {
@@ -97,7 +99,7 @@ export function init() {
     animate();
 }
 
-export function terminate() {
+export function pause() {
     window.cancelAnimationFrame(loop);
 }
 
@@ -124,6 +126,8 @@ function setUpCanvas() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
     });
+
+    play();
 }
 
 function setCell(i: number, spin: number) {
@@ -177,4 +181,8 @@ function calcEnergy(i: number) {
 
 export function meanEnergy() {
     return util.sum(data.map(datum => datum.energy)) / data.length;
+}
+
+export function meanMagnetization() {
+    return Math.abs(util.sum(data.map(datum => datum.spin)) / data.length);
 }
