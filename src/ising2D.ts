@@ -45,6 +45,9 @@ export function init() {
                 data[i].spin *= -1;
                 setCell(i, data[i].spin);
             }
+
+            // Calculate energy of cell
+            data[i].energy = calcEnergy(i);
         }
     }, 1);
 }
@@ -55,6 +58,7 @@ export function terminate() {
 
 function setUpCanvas() {
     let canvas = document.createElement('canvas');
+    canvas.setAttribute('class', 'canvas');
     canvas.width = gridWidth * 2;
     canvas.height = gridHeight * 2;
     canvas.style.position = 'absolute';
@@ -105,4 +109,8 @@ function getNeighboringCells(i: number) {
 function calcEnergy(i: number) {
     let neighborSpins = Object.values(getNeighboringCells(i)).map(idx => data[idx].spin);
     return -global.j * data[i].spin * util.sum(neighborSpins);
+}
+
+export function meanEnergy() {
+    return util.sum(data.map(datum => datum.energy)) / data.length;
 }

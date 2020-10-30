@@ -15,6 +15,7 @@ body {
     font-family: Futura;
     text-transform: uppercase;
     font-size: 80%;
+    overflow: hidden;
 }
 
 p,
@@ -35,9 +36,14 @@ button {
     outline: none;
 }
 
+.fas {
+    margin: 0px 6px;
+}
+
 #dimension-toggle {
     position: relative;
     display: flex;
+    background: black;
     border: 1px solid white;
     margin-top: 1rem;
     z-index: 2;
@@ -88,11 +94,78 @@ button {
     bottom: 0px;
     left: 0px;
     margin-left: 2rem;
-    padding: 1rem;
+    background: black;
     border: 1px solid white;
-    transition: width 0.5s, height 0.5s;
-}
+    height: auto;
+    width: auto;
+    z-index: 2;
 
-#analyze-content:not(.visible) {
-    display: none;
+    &.open {
+        opacity: 0.8;
+        transition: opacity 0.4s;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        #analyze-button {
+            background: #333;
+        }
+    }
+
+    &:not(.open) {
+        #analyze-content {
+            position: absolute;
+            top: 100vh;
+        }
+    }
+
+    #analyze-button {
+        display: inline-block;
+        padding: 1rem;
+        width: calc(100% - 2rem);
+        background: black;
+        transition: color 0.2s, background 0.2s;
+        cursor: pointer;
+
+        &:hover {
+            color: black;
+            background: white;
+        }
+    }
+
+    #analyze-content {
+        margin: 1rem;
+    }
+
+    #add-graph {
+        display: inline-block;
+        background: black;
+        padding: 5px;
+        transition: filter 0.2s;
+        cursor: pointer;
+
+        &:hover {
+            filter: invert(1);
+        }
+
+        &::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: white;
+        }
+    }
+
+    #graphs {
+        display: grid;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+
+        .graph-container {
+            scroll-snap-align: start;
+            padding-right: 5px;
+        }
+    }
 }

@@ -2,6 +2,8 @@ import * as analyze from './analyze';
 import * as ising2D from './ising2D';
 import * as ising3D from './ising3D';
 
+import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
+import '@fortawesome/fontawesome-free/scss/solid.scss';
 import './index.scss';
 
 function init() {
@@ -16,7 +18,7 @@ function switchTo2D() {
     document.getElementById('mask').classList.toggle('switch');
     document.getElementById('three').addEventListener('click', switchTo3D);
     document.getElementById('two').removeEventListener('click', switchTo2D);
-    document.getElementById('content').innerHTML = '';
+    document.getElementsByClassName('canvas')[0].remove();
 
     ising2D.init();
 }
@@ -27,7 +29,7 @@ function switchTo3D() {
     document.getElementById('mask').classList.toggle('switch');
     document.getElementById('two').addEventListener('click', switchTo2D);
     document.getElementById('three').removeEventListener('click', switchTo3D);
-    document.getElementById('content').innerHTML = '';
+    document.getElementsByClassName('canvas')[0].remove();
 
     ising3D.init();
 }

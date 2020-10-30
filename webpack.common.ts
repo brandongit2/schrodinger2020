@@ -40,13 +40,17 @@ const config: webpack.Configuration = {
                 enforce: 'pre'
             },
             {
-                test: /\.(png|ttf)$/i,
+                test: /\.woff2?/i,
+                use: ['url-loader']
+            },
+            {
+                test: /\.(png|ttf|svg|eot)$/i,
                 use: ['file-loader']
             }
         ]
     },
     resolve: {
-        extensions: ['.ts', '.js', '.json', '.png', '.ttf', '.scss', '.sass', '.html']
+        extensions: ['.js', '.ts']
     }
 };
 

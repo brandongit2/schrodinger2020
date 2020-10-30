@@ -50,9 +50,9 @@ export function init() {
     }
 
     // Then calculate energies
-    // for (let i = 0; i < data.length; i++) {
-    //     data[i].energy = calcEnergy(i);
-    // }
+    for (let i = 0; i < data.length; i++) {
+        data[i].energy = calcEnergy(i);
+    }
 
     setUpCanvas();
 
@@ -86,6 +86,9 @@ export function init() {
                 data[i].spin *= -1;
                 setCell(i, data[i].spin);
             }
+
+            // Calculate energy of cell
+            data[i].energy = calcEnergy(i);
         }
 
         renderer.render(scene, camera);
@@ -102,6 +105,7 @@ function setUpCanvas() {
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.domElement.setAttribute('class', 'canvas');
     renderer.domElement.style.position = 'fixed';
     renderer.domElement.style.top = '0px';
     document.getElementById('content').appendChild(renderer.domElement);
@@ -118,7 +122,7 @@ function setUpCanvas() {
 
     window.addEventListener('resize', () => {
         renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
     });
 }
 
@@ -169,4 +173,8 @@ function getNeighboringCells(i: number) {
 function calcEnergy(i: number) {
     let neighborSpins = Object.values(getNeighboringCells(i)).map(idx => data[idx].spin);
     return -global.j * data[i].spin * util.sum(neighborSpins);
+}
+
+export function meanEnergy() {
+    return util.sum(data.map(datum => datum.energy)) / data.length;
 }
